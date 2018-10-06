@@ -8,9 +8,9 @@ This is a small plugin for the Cinch IRC bot framework that interacts with the l
 
 ```
 <user> !last lastfm-username
-<bot> ♫ __I Don't Wanna Hear It__ by __Minor Threat__ on __First Two 7"s__ (3 plays)
+<bot> ♫ I Don't Wanna Hear It by Minor Threat on First Two 7"s (3 plays)
 <user> !last_info lastfm-username
-<bot> 👤 lastfm- username · 36183 plays since Oct 15 2013 · https://www.last.fm/user/lastfm-username
+<bot> 👤 lastfm-username · 36183 plays since Oct 15 2013 · https://www.last.fm/user/lastfm-username
 ```
 
 ## Dependencies
