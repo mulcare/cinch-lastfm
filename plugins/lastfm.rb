@@ -13,14 +13,20 @@ class Cinch::Lastfm
   def setup(*)
     @lastfm_api_key = config[:api_key]
     @lastfm_secret = config[:shared_secret]
-    @lastfm_api_url = "http://ws.audioscrobbler.com/2.0/?&format=json&api_key=#{@lastfm_api_key}"
+  end
+
+  def call_lastfm_api(**args)
+    url = "http://ws.audioscrobbler.com/2.0/?&format=json&api_key=#{@lastfm_api_key}"
+    args.each do |key, value|
+      url << "&#{key}=#{value}"
+    end
+    uri = URI(URI.escape(url))
+    response = Net::HTTP.get(uri)
+    JSON.parse(response)
   end
 
   def get_last_track(m, username)
-    url = @lastfm_api_url + "&method=user.getrecenttracks" + "&user=#{username}" + "&limit=1"
-    uri = URI(URI.escape(url))
-    response = Net::HTTP.get(uri)
-    last_track = JSON.parse(response)
+    last_track = call_lastfm_api(method: "user.getrecenttracks", user: username, limit: "1")
     if last_track.has_key?("error")
       m.reply handle_error(last_track)
     else
@@ -41,10 +47,7 @@ class Cinch::Lastfm
   end
 
   def get_track_playcount(username, artist, track, *mbid)
-    url = @lastfm_api_url + "&method=track.getInfo" + "&user=#{username}" + "&artist=#{artist}" + "&track=#{track}"
-    uri = URI(URI.escape(url))
-    response = Net::HTTP.get(uri)
-    track_info = JSON.parse(response)
+    track_info = call_lastfm_api(method: "track.getInfo", user: username, artist: artist, track: track)
     if track_info.has_key?("error")
       handle_error(track_info)
       playcount = ""
@@ -59,10 +62,7 @@ class Cinch::Lastfm
   end
 
   def get_user_info(m, username)
-    url = @lastfm_api_url + "&method=user.getinfo" + "&user=#{username}"
-    uri = URI(URI.escape(url))
-    response = Net::HTTP.get(uri)
-    user_info = JSON.parse(response)
+    user_info = call_lastfm_api(method: "user.getinfo", user: username)
     if user_info.has_key?("error")
       m.reply handle_error(user_info)
     else
