@@ -55,8 +55,10 @@ class Cinch::Lastfm
       playcount = track_info["track"]["userplaycount"]
       if playcount == "1"
         playcount = "(#{playcount} play)"
-      else
+      elsif playcount > "1"
         playcount = "(#{playcount} plays)"
+      else
+        playcount = ""
       end
     end
   end
